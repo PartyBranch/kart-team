@@ -55,6 +55,30 @@ footer{display:table;margin:20px auto 0;background:rgba(15,15,15,.85);padding:7p
 .rank.medal{font-size:32px;font-family:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif;line-height:1.25}
 .recordRow{grid-template-columns:42px minmax(0,1fr) auto}
 @media(max-width:440px){.recordRow{grid-template-columns:34px minmax(0,1fr) auto}.rank.medal{font-size:27px}}
+
+/* V3.8: podium honor cards, public car and notes only for ranks 1–3. */
+.portalCard.podium{--medal-ink:#ffe5a1;--medal-edge:#c99b42;--medal-bg:#2d2315;position:relative;isolation:isolate;overflow:hidden;padding:18px;border:1px solid var(--medal-edge);background:linear-gradient(120deg,var(--medal-bg),#141414 85%);box-shadow:inset 0 0 22px color-mix(in srgb,var(--medal-edge) 14%,transparent),0 4px 18px #0005}
+.portalCard.podium.silver-card{--medal-ink:#e5ebf4;--medal-edge:#9ea9b9;--medal-bg:#292e37}
+.portalCard.podium.bronze-card{--medal-ink:#f0b68e;--medal-edge:#bd825a;--medal-bg:#35241c}
+.portalCard.podium.gold-card{padding:20px;box-shadow:inset 0 0 28px #d9ad4920,0 0 18px #d9ad4938}
+.gold-card::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:linear-gradient(115deg,transparent 35%,#ffe7a01a 49%,transparent 63%);background-size:250% 100%;animation:championShine 7s ease-in-out infinite;z-index:-1}
+@keyframes championShine{0%,20%{background-position:100% 0}75%,100%{background-position:-100% 0}}
+.podiumLabel{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:11px;letter-spacing:.12em;font-weight:800;color:var(--medal-ink);padding-bottom:10px;margin-bottom:12px;border-bottom:1px solid color-mix(in srgb,var(--medal-edge) 40%,transparent)}
+.podium .recordRow{grid-template-columns:56px minmax(0,1fr);gap:4px 14px;align-items:center}
+.podium .rank.medal{grid-row:1 / 3;align-self:center;line-height:0;width:56px}
+.podium .rank.medal svg{width:100%;height:auto;display:block;filter:drop-shadow(0 3px 5px #0006)}
+.podium .name{font-size:clamp(20px,4.8vw,27px);font-weight:850;line-height:1.25;color:var(--medal-ink);overflow-wrap:anywhere}
+.podium .recordTime{grid-column:2;text-align:left;color:var(--medal-ink);font-size:clamp(25px,6.5vw,36px);line-height:1.12;letter-spacing:.025em;overflow-wrap:anywhere}
+.podium .recordTime small{font-size:12px;line-height:1.5;letter-spacing:0;margin-top:4px;color:#dfd9cf}
+.gold-card .recordRow{grid-template-columns:74px minmax(0,1fr);column-gap:15px}
+.gold-card .rank.medal{width:74px}
+.gold-card .name{font-size:clamp(23px,5.7vw,32px)}
+.gold-card .recordTime{font-size:clamp(30px,8vw,44px)}
+.podiumDetails{border-top:1px solid color-mix(in srgb,var(--medal-edge) 35%,transparent);margin-top:14px;padding-top:10px;display:grid;gap:6px;font-size:14px;line-height:1.5;color:#f0ece4;white-space:pre-wrap;overflow-wrap:anywhere}
+.podiumDetailLabel{color:var(--medal-ink);font-weight:750;margin-right:8px}
+.podium .recordMeta{margin-top:10px}
+@media(max-width:440px){.portalCard.podium{padding:14px}.portalCard.podium.gold-card{padding:16px}.podium .recordRow{grid-template-columns:46px minmax(0,1fr);column-gap:10px}.podium .rank.medal{width:46px}.gold-card .recordRow{grid-template-columns:58px minmax(0,1fr)}.gold-card .rank.medal{width:58px}.podiumLabel{font-size:10px;letter-spacing:.07em}.podium .recordTime{letter-spacing:0}}
+@media(prefers-reduced-motion:reduce){.gold-card::after{animation:none;background:none}}
 </style></head><body><main><header class="hero"><div class="eyebrow">KARTRIDER RUSH+ / RACING TEAM</div><h1>ᴷᴾ台灣民眾黨 🌱</h1><p>車隊名冊 · 公告 · 賽道排行榜</p></header>
 <nav class="tabs" role="tablist" aria-label="車隊功能"><button id="tabMembers" role="tab" aria-controls="membersPane" aria-selected="true">成員名冊</button><button id="tabAnnouncements" role="tab" aria-controls="announcementsPane" aria-selected="false">車隊公告</button><button id="tabRecords" role="tab" aria-controls="recordsPane" aria-selected="false">賽道成績</button></nav>
 <div id="membersPane" role="tabpanel" aria-labelledby="tabMembers"><p id="memberFeedback" class="status" role="status"></p>
@@ -86,8 +110,8 @@ footer{display:table;margin:20px auto 0;background:rgba(15,15,15,.85);padding:7p
     <label>固定賽道</label><div class="fixedTrack">城鎮高速公路</div>
     <label for="rGame">車手遊戲 ID</label><input id="rGame" maxlength="80" list="memberSuggestions" required><datalist id="memberSuggestions"></datalist>
     <label for="rTime">完成時間（分:秒.毫秒）</label><input id="rTime" maxlength="12" required placeholder="例如：1:42.38" inputmode="text" pattern="[0-9]{1,2}:[0-5][0-9]([.][0-9]{1,3})?">
-    <label for="rCar">使用車輛（選填）</label><input id="rCar" maxlength="80">
-    <label for="rNote">備註（選填）</label><input id="rNote" maxlength="200">
+    <label for="rCar">車種（選填）</label><input id="rCar" maxlength="80">
+    <label for="rNote">備註（選填）</label><input id="rNote" maxlength="200"><p class="notice">車種及備註皆可填寫，排行榜僅顯示前三名的詳細資料。</p>
     <div class="actions"><button type="submit" id="rSubmit">送出審核</button><button type="button" class="secondary" id="rCancel">取消</button></div>
   </form>
   <section id="recordAdmin" class="panel portalReview" hidden><h3>成績審核中心</h3><div class="actions"><button id="directRecord" class="secondary">新增正式成績</button></div><div id="recordPending"></div></section>
@@ -96,7 +120,7 @@ footer{display:table;margin:20px auto 0;background:rgba(15,15,15,.85);padding:7p
 </section>
 <section class="panel" id="authPanel" aria-label="管理員登入"><div class="actions"><button id="login" disabled>管理員 Google 登入</button><button id="logout" class="secondary" hidden>登出</button><span id="who"></span></div><p id="status" class="status" role="status">正在連線 Firebase…</p>
 </section>
-<footer>ᴷᴾ 車隊官方網站 · V3.7 · 請勿轉傳他人聯絡資料</footer></main>
+<footer>ᴷᴾ 車隊官方網站 · V3.8 · 請勿轉傳他人聯絡資料</footer></main>
 <script type="module">
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js';
 import {getAuth,GoogleAuthProvider,signInWithPopup,signInAnonymously,onAuthStateChanged,signOut} from 'https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js';
@@ -170,6 +194,15 @@ async function setAnnouncementPin(m){
 }
 function compareAnnouncements(a,b){return Number(b.pinned===true)-Number(a.pinned===true)||(b.updatedAt?.toMillis()||0)-(a.updatedAt?.toMillis()||0)||a.id.localeCompare(b.id)}
 function renderAnnouncements(){const {items,loaded}=portal.announcement,el=$('announcementList');el.replaceChildren();if(!loaded){el.append(node('p','公告尚未載入。','portalEmpty'));return}if(!items.length)el.append(node('p','目前沒有公告，歡迎投稿。','portalEmpty'));for(const m of [...items].sort(compareAnnouncements)){const card=node('article','','portalCard'+(m.pinned===true?' pinned':''));const meta=node('div','','portalMeta');if(m.pinned===true)meta.append(node('span','📌 置頂','pinTag'));meta.append(node('span',m.category,'portalTag'),node('span',dateText(m.updatedAt)+' ｜ '+m.author));card.append(meta,node('h3',m.title),node('p',m.body,'portalBody'));attachPublicActions('announcement',card,m);if(admin)card.querySelector('.actions').prepend(btn(m.pinned===true?'取消置頂':'📌 置頂公告',()=>setAnnouncementPin(m),'pinAction'));el.append(card)}}
+function makeMedal(rank,index){
+ const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');
+ svg.setAttribute('viewBox','0 0 80 92');svg.setAttribute('aria-hidden','true');svg.setAttribute('focusable','false');
+ const colors=[null,['#fff1a7','#e4b748','#986019','#66420f'],['#f7faff','#c5ceda','#74808e','#303945'],['#ffd7b3','#cc8e5f','#925635','#59361f']][rank];
+ const id='medal-gradient-'+index;
+ // The markup uses only fixed palette values and numeric rank/index, never user input.
+ svg.innerHTML=`<defs><linearGradient id="${id}" x1="0%" y1="0%" x2="100%" y2="100%"><stop stop-color="${colors[0]}"/><stop offset=".48" stop-color="${colors[1]}"/><stop offset="1" stop-color="${colors[2]}"/></linearGradient></defs><path d="M18 2H34L46 39H27Z" fill="#943c3d"/><path d="M46 2H62L51 39H32Z" fill="#cf5450"/><circle cx="40" cy="57" r="29" fill="url(#${id})" stroke="${colors[0]}" stroke-width="2"/><circle cx="40" cy="57" r="23" fill="none" stroke="${colors[2]}" stroke-width="1.5"/><text x="40" y="68" text-anchor="middle" font-size="30" font-weight="800" fill="${colors[3]}">${rank}</text>`;
+ return svg;
+}
 function renderRecords(){
  const {items,loaded}=portal.record,el=$('recordList');el.replaceChildren();
  if(!loaded){el.append(node('p','賽道紀錄尚未載入。','portalEmpty'));return}
@@ -180,12 +213,16 @@ function renderRecords(){
  if(!shown.length){el.append(node('p',list.length?'沒有符合條件的紀錄。':'目前沒有成績，歡迎投稿。','portalEmpty'));return}
  let rank=0,prev=-1;
  for(const [i,m] of list.entries()){if(m.timeMs!==prev)rank=i+1;prev=m.timeMs;if(!shown.includes(m))continue;
- const card=node('article','','portalCard'+(rank===1?' best':'')),row=node('div','','recordRow'),driver=node('div',''),time=node('div',formatTime(m.timeMs),'recordTime');
- driver.append(node('div',m.game,'name'));if(m.car)driver.append(node('small',m.car));
+ const podium=rank<=3, tone=['','gold','silver','bronze'][rank];
+ const card=node('article','','portalCard'+(podium?' podium '+tone+'-card':'')),row=node('div','','recordRow'),driver=node('div',''),time=node('div',formatTime(m.timeMs),'recordTime');
+ if(podium){const label=node('div','','podiumLabel');label.append(node('span',['','CHAMPION · 車隊紀錄保持者','SILVER · 第二名','BRONZE · 第三名'][rank]),node('span',rank===1?'♛':'TOP '+rank));card.append(label)}
+ driver.append(node('div',m.game,'name'));
  time.append(node('small',rank===1?'最佳紀錄':'+'+((m.timeMs-list[0].timeMs)/1000).toFixed(3)+' 秒'));
- const medal=['','🥇','🥈','🥉'][rank];const rankBadge=node('div',medal||String(rank).padStart(2,'0'),'rank '+(['','gold','silver','bronze'][rank]||'')+(medal?' medal':''));rankBadge.setAttribute('aria-label',`第 ${rank} 名`);rankBadge.title=`第 ${rank} 名`;
+ const rankBadge=node('div',podium?'':String(rank).padStart(2,'0'),'rank'+(podium?' '+tone+' medal':''));rankBadge.setAttribute('aria-label',`第 ${rank} 名`);rankBadge.title=`第 ${rank} 名`;
+ if(podium)rankBadge.append(makeMedal(rank,i));
  row.append(rankBadge,driver,time);card.append(row);
- if(m.note)card.append(node('p',m.note,'portalBody'));card.append(node('div','更新：'+dateText(m.updatedAt),'portalMeta'));attachPublicActions('record',card,m);el.append(card)}
+ if(podium&&(m.car||m.note)){const details=node('div','','podiumDetails');for(const [label,value] of [['車種',m.car],['備註',m.note]]){if(value){const line=node('div','');line.append(node('span',label,'podiumDetailLabel'),document.createTextNode(value));details.append(line)}}card.append(details)}
+ card.append(node('div','更新：'+dateText(m.updatedAt),'portalMeta recordMeta'));attachPublicActions('record',card,m);el.append(card)}
 }
 $('driverFilter').oninput=renderRecords;
 let pendingRequests=[];
