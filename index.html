@@ -46,6 +46,10 @@ main { position:relative; }
 #authPanel #status{font-size:13px;text-align:center;padding:5px 0 0}
 #memberFeedback:not(:empty){background:rgba(15,15,15,.92);border-radius:10px;padding:10px 12px;margin-top:10px}
 footer{display:table;margin:20px auto 0;background:rgba(15,15,15,.85);padding:7px 11px;border-radius:10px;color:#d6d1c5}
+/* V3.6: pinned announcements */
+.portalCard.pinned{border-color:#bd984c;background:rgba(40,32,17,.94);box-shadow:inset 3px 0 0 #efc34e}
+.pinTag{display:inline-block;color:#1b150a;background:#efc34e;border-radius:5px;padding:2px 7px;font-size:12px;font-weight:750;margin-right:6px}
+.pinAction{background:#302818;color:#f6d77c;border:1px solid #a4823c}
 </style></head><body><main><header class="hero"><div class="eyebrow">KARTRIDER RUSH+ / RACING TEAM</div><h1>ᴷᴾ台灣民眾黨 🌱</h1><p>車隊名冊 · 公告 · 賽道排行榜</p></header>
 <nav class="tabs" role="tablist" aria-label="車隊功能"><button id="tabMembers" role="tab" aria-controls="membersPane" aria-selected="true">成員名冊</button><button id="tabAnnouncements" role="tab" aria-controls="announcementsPane" aria-selected="false">車隊公告</button><button id="tabRecords" role="tab" aria-controls="recordsPane" aria-selected="false">賽道成績</button></nav>
 <div id="membersPane" role="tabpanel" aria-labelledby="tabMembers"><p id="memberFeedback" class="status" role="status"></p><p class="notice">本名冊為公開網頁，請勿擅自轉傳聯絡資料。</p>
@@ -85,7 +89,7 @@ footer{display:table;margin:20px auto 0;background:rgba(15,15,15,.85);padding:7p
 </section>
 <section class="panel" id="authPanel" aria-label="管理員登入"><div class="actions"><button id="login" disabled>管理員 Google 登入</button><button id="logout" class="secondary" hidden>登出</button><span id="who"></span></div><p id="status" class="status" role="status">正在連線 Firebase…</p>
 </section>
-<footer>ᴷᴾ 車隊官方網站 · V3.5 · 請勿轉傳他人聯絡資料</footer></main>
+<footer>ᴷᴾ 車隊官方網站 · V3.6 · 請勿轉傳他人聯絡資料</footer></main>
 <script type="module">
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js';
 import {getAuth,GoogleAuthProvider,signInWithPopup,signInAnonymously,onAuthStateChanged,signOut} from 'https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js';
@@ -148,10 +152,17 @@ if(kind==='record'&&ds.exists()&&(!old||old.id!==out.id)){
  if(old)throw Error('更正後的車手及賽道已有紀錄，請先處理重複資料');
  if(data.timeMs>=ds.data().timeMs)throw Error('已有相同或更快的紀錄，請拒絕此投稿；若需更正請使用編輯功能');
 }
-const createdAt=os?.exists()?os.data().createdAt:ds?.exists()?ds.data().createdAt:serverTimestamp();tx.set(out,{...data,createdAt,updatedAt:serverTimestamp()});if(old&&old.id!==out.id)tx.delete(old);if(req)tx.delete(req);});}
+const createdAt=os?.exists()?os.data().createdAt:ds?.exists()?ds.data().createdAt:serverTimestamp();tx.set(out,{...data,...(kind==='announcement'?{pinned:os?.exists()?os.data().pinned===true:false}:{}),createdAt,updatedAt:serverTimestamp()});if(old&&old.id!==out.id)tx.delete(old);if(req)tx.delete(req);});}
 for(const kind of ['announcement','record']){$(kind+'Form').onsubmit=e=>{e.preventDefault();act(async()=>{const {mode,target}=forms[kind],data=getFields(kind);if(mode==='direct'){await publish(kind,data,target,null);closeForm(kind);message('已儲存並公開。')}else{const u=auth.currentUser||(await signInAnonymously(auth)).user;await addDoc(requests,{uid:u.uid,kind,targetId:target?.id||'',data,createdAt:serverTimestamp()});closeForm(kind);message('已送出，等待管理員審核。')}})}}
 function attachPublicActions(kind,card,m){const a=node('div','','actions');a.append(btn('申請更正',()=>openPortalForm(kind,'request',m)));if(admin){a.append(btn('管理員編輯',()=>openPortalForm(kind,'direct',m)),btn('刪除',async()=>{if(!confirm('確定刪除此公開資料？'))return;await runTransaction(db,async tx=>{const ref=doc(portal[kind].col,m.id),snap=await tx.get(ref);if(!snap.exists()||!sameData(kind,snap.data(),m)||snap.data().updatedAt?.toMillis()!==m.updatedAt?.toMillis())throw Error('資料已變更，請重新確認');tx.delete(ref)});message('已刪除。')},'danger'))}card.append(a)}
-function renderAnnouncements(){const {items,loaded}=portal.announcement,el=$('announcementList');el.replaceChildren();if(!loaded){el.append(node('p','公告尚未載入。','portalEmpty'));return}if(!items.length)el.append(node('p','目前沒有公告，歡迎投稿。','portalEmpty'));for(const m of items){const card=node('article','','portalCard');const meta=node('div','','portalMeta');meta.append(node('span',m.category,'portalTag'),node('span',dateText(m.updatedAt)+' ｜ '+m.author));card.append(meta,node('h3',m.title),node('p',m.body,'portalBody'));attachPublicActions('announcement',card,m);el.append(card)}}
+async function setAnnouncementPin(m){
+ if(!admin)throw Error('需要管理員權限');
+ const pinned=m.pinned!==true,ref=doc(portal.announcement.col,m.id);
+ await runTransaction(db,async tx=>{const snap=await tx.get(ref);if(!snap.exists())throw Error('公告已不存在');if((snap.data().pinned===true)!==(m.pinned===true))throw Error('置頂狀態已變更，請重新確認');tx.update(ref,{pinned});});
+ message(pinned?'已置頂公告。':'已取消置頂。');
+}
+function compareAnnouncements(a,b){return Number(b.pinned===true)-Number(a.pinned===true)||(b.updatedAt?.toMillis()||0)-(a.updatedAt?.toMillis()||0)||a.id.localeCompare(b.id)}
+function renderAnnouncements(){const {items,loaded}=portal.announcement,el=$('announcementList');el.replaceChildren();if(!loaded){el.append(node('p','公告尚未載入。','portalEmpty'));return}if(!items.length)el.append(node('p','目前沒有公告，歡迎投稿。','portalEmpty'));for(const m of [...items].sort(compareAnnouncements)){const card=node('article','','portalCard'+(m.pinned===true?' pinned':''));const meta=node('div','','portalMeta');if(m.pinned===true)meta.append(node('span','📌 置頂','pinTag'));meta.append(node('span',m.category,'portalTag'),node('span',dateText(m.updatedAt)+' ｜ '+m.author));card.append(meta,node('h3',m.title),node('p',m.body,'portalBody'));attachPublicActions('announcement',card,m);if(admin)card.querySelector('.actions').prepend(btn(m.pinned===true?'取消置頂':'📌 置頂公告',()=>setAnnouncementPin(m),'pinAction'));el.append(card)}}
 function renderRecords(){
  const {items,loaded}=portal.record,el=$('recordList');el.replaceChildren();
  if(!loaded){el.append(node('p','賽道紀錄尚未載入。','portalEmpty'));return}
@@ -172,7 +183,7 @@ $('driverFilter').oninput=renderRecords;
 let pendingRequests=[];
 function renderPortalPending(){for(const kind of ['announcement','record']){const el=$(kind+'Pending');el.replaceChildren();if(!admin)continue;const rows=pendingRequests.filter(r=>r.kind===kind);if(!rows.length){el.append(node('p','目前沒有待審核投稿。'));continue}for(const r of rows){const card=node('div','','adminrow');const target=r.targetId?portal[kind].items.find(x=>x.id===r.targetId):null;card.append(node('div',(r.targetId?'更正申請':'新增投稿')+' ｜ '+dateText(r.createdAt),'portalMeta'));if(r.targetId)card.append(node('div',target?'原公開資料：\n'+dataSummary(kind,target):'原公開資料已不存在，無法核准此更正。','reviewDetail'));card.append(node('div','申請內容：\n'+dataSummary(kind,r.data),'reviewDetail'));const a=node('div','','actions');const approve=btn('核准並公開',async()=>{if(!confirm('確定核准並公開這筆資料？'))return;if(r.targetId&&!target)throw Error('原資料不存在');await publish(kind,r.data,target,r);message('已核准並公開。')},'');const unsupported=kind==='record'&&(!isSupportedTrack(r.data)||(target&&!isSupportedTrack(target)));if(unsupported)card.append(node('p','非目前指定賽道，僅能拒絕此申請。','status'));approve.disabled=unsupported||(!!r.targetId&&!target);a.append(approve,btn('拒絕',async()=>{if(!confirm('確定拒絕此投稿？'))return;await deleteDoc(doc(requests,r.id));message('已拒絕投稿。')},'danger'));card.append(a);el.append(card)}}}
 function setPortalAdmin(allowed){const epoch=++portalEpoch;stopPortalRequests?.();stopPortalRequests=null;pendingRequests=[];for(const kind of ['announcement','record']){$(kind+'Admin').hidden=!allowed;if(!allowed&&forms[kind].mode==='direct')closeForm(kind)}renderAnnouncements();renderRecords();renderPortalPending();if(allowed)stopPortalRequests=onSnapshot(requests,s=>{if(epoch!==portalEpoch||!admin)return;pendingRequests=s.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(a.createdAt?.toMillis()||0)-(b.createdAt?.toMillis()||0));renderPortalPending()},e=>{if(epoch===portalEpoch){pendingRequests=[];renderPortalPending();fail(e)}})}
-for(const kind of ['announcement','record'])onSnapshot(portal[kind].col,s=>{portal[kind].loaded=true;portal[kind].items=s.docs.map(d=>({...d.data(),id:d.id}));if(kind==='announcement'){portal[kind].items.sort((a,b)=>(b.updatedAt?.toMillis()||0)-(a.updatedAt?.toMillis()||0));renderAnnouncements()}else renderRecords();if(admin)renderPortalPending()},e=>{portal[kind].loaded=false;$(kind+'List').replaceChildren(node('p','資料讀取失敗，請確認新版 Firebase 安全規則已發布。','portalEmpty'));console.error(e)});
+for(const kind of ['announcement','record'])onSnapshot(portal[kind].col,s=>{portal[kind].loaded=true;portal[kind].items=s.docs.map(d=>({...d.data(),id:d.id}));if(kind==='announcement'){renderAnnouncements()}else renderRecords();if(admin)renderPortalPending()},e=>{portal[kind].loaded=false;$(kind+'List').replaceChildren(node('p','資料讀取失敗，請確認新版 Firebase 安全規則已發布。','portalEmpty'));console.error(e)});
 
 
 $('search').oninput=render;$('role').onchange=render;
