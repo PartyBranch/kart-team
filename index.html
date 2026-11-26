@@ -5,7 +5,7 @@
 const teamName='ᴷᴾ台灣民眾黨 🌱';
 const isDemo=false;
 const members=[
- {game:'ᴷᴾღ柯文哲',line:'展穎',nick:'',role:''}
+ {game:'ᴷᴾღ柯文哲',line:'展穎',nick:'',role:'隊長'}
 ];
 const $=id=>document.getElementById(id);$('team').textContent=teamName;document.title=teamName+'｜成員名冊';$('total').textContent=members.length;$('version').textContent=isDemo?'DEMO':'LIVE';$('notice').textContent=isDemo?'測試名冊 · 請確認成員資料後再正式發布。':'本名冊為公開網頁，請勿擅自轉傳聯絡資料。';for(const r of new Set(members.map(m=>m.role))){const o=document.createElement('option');o.value=r;o.textContent=r;$('role').append(o)}
 function el(tag,cls,t){const e=document.createElement(tag);e.className=cls;e.textContent=t;return e}async function copy(t,b){try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(t)}else{const a=document.createElement('textarea');a.value=t;document.body.append(a);a.select();const ok=document.execCommand('copy');a.remove();if(!ok)throw Error('copy failed')}b.textContent='已複製';setTimeout(()=>b.textContent='複製 LINE',1300)}catch{b.textContent='請手動複製'}}
