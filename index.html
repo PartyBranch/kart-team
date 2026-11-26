@@ -31,8 +31,8 @@ main { position:relative; }
 .portalControls label{margin:0}
 .status:empty{display:none}
 .portalStatus:not(:empty){background:rgba(15,15,15,.92);border-radius:10px;padding:10px 12px}
-#registration{margin-top:24px;padding:0;background:rgba(15,15,15,.85)}
-#registration summary{cursor:pointer;padding:13px 15px;color:#e6d4a0;font-size:14px;font-weight:650;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px}
+#registration{margin-top:14px;padding:0;background:rgba(15,15,15,.91);border-color:#a4823c}
+#registration summary{cursor:pointer;padding:13px 15px;color:#efc34e;font-size:14px;font-weight:650;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px}
 #registration summary::-webkit-details-marker{display:none}
 #registration summary::after{content:"+";font-size:20px;font-weight:400;color:var(--accent)}
 #registration[open] summary::after{content:"−"}
@@ -50,12 +50,19 @@ footer{display:table;margin:20px auto 0;background:rgba(15,15,15,.85);padding:7p
 .portalCard.pinned{border-color:#bd984c;background:rgba(40,32,17,.94);box-shadow:inset 3px 0 0 #efc34e}
 .pinTag{display:inline-block;color:#1b150a;background:#efc34e;border-radius:5px;padding:2px 7px;font-size:12px;font-weight:750;margin-right:6px}
 .pinAction{background:#302818;color:#f6d77c;border:1px solid #a4823c}
+/* V3.7: top registration and podium medals */
+.rank{text-align:center;line-height:1.2}
+.rank.medal{font-size:32px;font-family:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif;line-height:1.25}
+.recordRow{grid-template-columns:42px minmax(0,1fr) auto}
+@media(max-width:440px){.recordRow{grid-template-columns:34px minmax(0,1fr) auto}.rank.medal{font-size:27px}}
 </style></head><body><main><header class="hero"><div class="eyebrow">KARTRIDER RUSH+ / RACING TEAM</div><h1>ᴷᴾ台灣民眾黨 🌱</h1><p>車隊名冊 · 公告 · 賽道排行榜</p></header>
 <nav class="tabs" role="tablist" aria-label="車隊功能"><button id="tabMembers" role="tab" aria-controls="membersPane" aria-selected="true">成員名冊</button><button id="tabAnnouncements" role="tab" aria-controls="announcementsPane" aria-selected="false">車隊公告</button><button id="tabRecords" role="tab" aria-controls="recordsPane" aria-selected="false">賽道成績</button></nav>
-<div id="membersPane" role="tabpanel" aria-labelledby="tabMembers"><p id="memberFeedback" class="status" role="status"></p><p class="notice">本名冊為公開網頁，請勿擅自轉傳聯絡資料。</p>
+<div id="membersPane" role="tabpanel" aria-labelledby="tabMembers"><p id="memberFeedback" class="status" role="status"></p>
+<details class="panel" id="registration"><summary>成員登記 / 更新資料（免登入）</summary><form id="apply"><p>請填入對應 ID。</p><label for="game">遊戲 ID</label><input id="game" maxlength="80" required><label for="line">LINE ID 或顯示名稱</label><input id="line" maxlength="100" required><label for="nick">群組暱稱（選填）</label><input id="nick" maxlength="80"><label class="check"><input type="checkbox" id="consent" required>我同意審核通過後，以上資料公開於車隊網站。</label><button type="submit" id="submitApplication" disabled>送出審核</button><p id="own" class="status"></p></form></details>
+<p class="notice">本名冊為公開網頁，請勿擅自轉傳聯絡資料。</p>
 <section id="admin" class="panel" hidden><h2>管理員後台</h2><div class="actions"><button id="seed" class="secondary">匯入原本六位成員（首次）</button><button id="new" class="secondary">新增正式成員</button></div><section id="adminSettings" hidden><h3>管理員權限設定</h3><p>只有最高管理員能新增或撤銷其他管理員。新增後，對方使用該 Google 帳號登入即可。</p><form id="grantAdmin"><label for="adminEmail">管理員 Gmail</label><input id="adminEmail" type="email" maxlength="254" required placeholder="example@gmail.com"><button type="submit" style="margin-top:10px">新增管理員</button></form><p id="adminStatus" role="status"></p><div id="adminList"></div></section><h3>待審核申請</h3><div id="pending"></div><h3>正式成員管理</h3><div id="manage"></div><form id="edit" hidden><h3 id="editTitle">編輯成員</h3><label for="eg">遊戲 ID</label><input id="eg" maxlength="80" required><label for="el">LINE ID / 顯示名稱</label><input id="el" maxlength="100" required><label for="en">群組暱稱</label><input id="en" maxlength="80"><label for="er">職位</label><input id="er" maxlength="40" required><div class="actions" style="margin-top:12px"><button type="submit">儲存</button><button type="button" id="cancel" class="secondary">取消</button></div></form></section>
 <div class="toolbar"><input id="search" type="search" placeholder="搜尋遊戲 ID、LINE ID 或暱稱" aria-label="搜尋成員"><select id="role" aria-label="成員分類"><option value="">全部成員</option></select></div><p id="count" role="status" style="font-size:13px;margin:0 0 10px">讀取中…</p><section id="list" aria-label="成員名單"></section>
-<details class="panel" id="registration"><summary>成員登記 / 更新資料（免登入）</summary><form id="apply"><p>請填入對應 ID。</p><label for="game">遊戲 ID</label><input id="game" maxlength="80" required><label for="line">LINE ID 或顯示名稱</label><input id="line" maxlength="100" required><label for="nick">群組暱稱（選填）</label><input id="nick" maxlength="80"><label class="check"><input type="checkbox" id="consent" required>我同意審核通過後，以上資料公開於車隊網站。</label><button type="submit" id="submitApplication" disabled>送出審核</button><p id="own" class="status"></p></form></details></div>
+</div>
 <section id="announcementsPane" role="tabpanel" aria-labelledby="tabAnnouncements" hidden>
   <div class="portalHead"><div><h2>車隊公告</h2><p>活動、團練、比賽與重要通知</p></div><button id="addAnnouncement">＋ 投稿公告</button></div>
   <p class="status portalStatus" id="announcementStatus" role="status"></p>
@@ -89,7 +96,7 @@ footer{display:table;margin:20px auto 0;background:rgba(15,15,15,.85);padding:7p
 </section>
 <section class="panel" id="authPanel" aria-label="管理員登入"><div class="actions"><button id="login" disabled>管理員 Google 登入</button><button id="logout" class="secondary" hidden>登出</button><span id="who"></span></div><p id="status" class="status" role="status">正在連線 Firebase…</p>
 </section>
-<footer>ᴷᴾ 車隊官方網站 · V3.6 · 請勿轉傳他人聯絡資料</footer></main>
+<footer>ᴷᴾ 車隊官方網站 · V3.7 · 請勿轉傳他人聯絡資料</footer></main>
 <script type="module">
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js';
 import {getAuth,GoogleAuthProvider,signInWithPopup,signInAnonymously,onAuthStateChanged,signOut} from 'https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js';
@@ -176,7 +183,8 @@ function renderRecords(){
  const card=node('article','','portalCard'+(rank===1?' best':'')),row=node('div','','recordRow'),driver=node('div',''),time=node('div',formatTime(m.timeMs),'recordTime');
  driver.append(node('div',m.game,'name'));if(m.car)driver.append(node('small',m.car));
  time.append(node('small',rank===1?'最佳紀錄':'+'+((m.timeMs-list[0].timeMs)/1000).toFixed(3)+' 秒'));
- row.append(node('div',String(rank).padStart(2,'0'),'rank '+(['','gold','silver','bronze'][rank]||'')),driver,time);card.append(row);
+ const medal=['','🥇','🥈','🥉'][rank];const rankBadge=node('div',medal||String(rank).padStart(2,'0'),'rank '+(['','gold','silver','bronze'][rank]||'')+(medal?' medal':''));rankBadge.setAttribute('aria-label',`第 ${rank} 名`);rankBadge.title=`第 ${rank} 名`;
+ row.append(rankBadge,driver,time);card.append(row);
  if(m.note)card.append(node('p',m.note,'portalBody'));card.append(node('div','更新：'+dateText(m.updatedAt),'portalMeta'));attachPublicActions('record',card,m);el.append(card)}
 }
 $('driverFilter').oninput=renderRecords;
