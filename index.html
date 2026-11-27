@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>ᴷᴾ台灣民眾黨 🌱｜車隊網站</title><style>
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>ᴷᴾ台灣民眾黨 🌱｜車隊官方網站</title><style>
 :root{color-scheme:dark;--bg:#090909;--panel:#171717;--muted:#a9a7a2;--accent:#efc34e;--line:#383329}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top right,#33270b 0,transparent 55%),var(--bg);color:#faf8f1;font:16px/1.5 system-ui,-apple-system,sans-serif}main{max-width:760px;margin:auto;padding:24px 16px 40px}.hero{position:relative;overflow:hidden;background:linear-gradient(120deg,#272015,#111111);border:1px solid #625027;border-radius:22px;padding:28px 22px 22px}.hero:after{content:"";position:absolute;right:-45px;top:-55px;width:170px;height:200px;transform:rotate(35deg);background:repeating-conic-gradient(#fff0 0% 25%,#ffffff0d 0% 50%) 0 0/32px 32px;pointer-events:none}.eyebrow{color:var(--accent);font-size:12px;letter-spacing:.18em;font-weight:800}h1{margin:8px 0 4px;font-size:clamp(28px,7vw,44px);line-height:1.2}p{margin:0;color:var(--muted)}.stats{display:flex;gap:24px;border-top:1px solid #ffffff25;margin-top:20px;padding-top:16px}.stats b{display:block;font-size:24px}.stats span,small{color:var(--muted);font-size:12px}.toolbar{margin:24px 0 14px;display:grid;gap:10px}input,select{width:100%;background:var(--panel);border:1px solid var(--line);padding:13px;border-radius:11px;color:inherit;font:inherit}input:focus,select:focus,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}#list{display:grid;gap:10px}.member{display:flex;align-items:center;gap:13px;padding:15px;background:var(--panel);border:1px solid var(--line);border-radius:15px}.avatar{flex:0 0 44px;height:44px;display:grid;place-items:center;background:#332914;border-radius:12px;color:var(--accent);font-weight:800}.info{flex:1;min-width:0}.name{font-weight:750;overflow-wrap:anywhere}.role{color:var(--accent);font-size:12px;margin-left:7px;white-space:nowrap}.lineid{font-size:14px;color:var(--muted);overflow-wrap:anywhere}button{background:var(--accent);color:#17130a;border:0;border-radius:9px;padding:10px 12px;font:700 13px system-ui;cursor:pointer;white-space:nowrap}button:active{opacity:.7}footer{color:var(--muted);text-align:center;font-size:12px;margin-top:26px}.empty{text-align:center;padding:25px}.notice{margin-top:12px;font-size:12px;color:var(--muted)}@media(min-width:540px){.toolbar{grid-template-columns:1fr 155px}}@media(max-width:360px){.member{gap:8px;padding:12px}.avatar{display:none}} 
 body { min-height:100vh; background:#090909; isolation:isolate; }
 body::before { content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
@@ -79,10 +79,26 @@ footer{display:table;margin:20px auto 0;background:rgba(15,15,15,.85);padding:7p
 .podium .recordMeta{margin-top:10px}
 @media(max-width:440px){.portalCard.podium{padding:14px}.portalCard.podium.gold-card{padding:16px}.podium .recordRow{grid-template-columns:46px minmax(0,1fr);column-gap:10px}.podium .rank.medal{width:46px}.gold-card .recordRow{grid-template-columns:58px minmax(0,1fr)}.gold-card .rank.medal{width:58px}.podiumLabel{font-size:10px;letter-spacing:.07em}.podium .recordTime{letter-spacing:0}}
 @media(prefers-reduced-motion:reduce){.gold-card::after{animation:none;background:none}}
-/* V3.9.1: independent player team disclaimer */
-.siteDisclaimer{max-width:620px;margin:16px auto 0;padding:14px 12px 0;border-top:1px solid #ffffff25;text-align:center;font-size:12px;line-height:1.8;color:var(--muted);overflow-wrap:anywhere}
-.siteDisclaimer strong{display:block;font-size:12px;color:#e0dcd3;margin-bottom:5px}
-.siteDisclaimer p{margin:0;font-size:12px;line-height:1.8;color:inherit}
+
+/* V3.9: default podium, compact full leaderboard for screenshots. */
+#recordList{scroll-margin-top:85px}
+.leaderboardSwitch{display:flex;gap:8px;justify-content:center;margin:12px 0}
+.leaderboardSwitch button{width:100%;padding:12px;white-space:normal;font-size:14px}
+.compactBoard{background:#fcfaf6;color:#151515;border:1px solid #d9d4ca;border-radius:14px;padding:10px;box-shadow:0 4px 16px #0004}
+.compactHeader{text-align:center;padding:5px 4px 10px;border-bottom:1px solid #e2ded6;margin-bottom:6px}
+.compactHeader h3{color:#202020;font-size:16px;margin:0 0 3px;line-height:1.35}
+.compactHeader p{font-size:11px;color:#57534b}
+.compactEntry{margin:0 0 3px;border-radius:7px;overflow:hidden;background:#eeefef;color:#151515}
+.compactEntry:last-child{margin-bottom:0}
+.compactEntry.gold{background:#f7de76}.compactEntry.silver{background:#c8d4e2}.compactEntry.bronze{background:#edb28a}
+.compactRow{display:grid;grid-template-columns:48px minmax(0,1fr) auto;align-items:center;gap:7px;width:100%;min-height:37px;padding:5px 8px;background:transparent;color:#151515;text-align:left;font-size:13px;line-height:1.25;border-radius:0;white-space:normal}
+.compactRow:hover{background:#00000009}.compactRow:focus-visible{outline-offset:-2px;outline-color:#665027}
+.compactRank{display:inline-flex;align-items:center;justify-content:center;min-width:0;border-radius:20px;background:#282828;color:white;font-size:11px;font-weight:800;padding:5px 3px;white-space:nowrap;line-height:1.15}
+.gold .compactRank{background:#fff6c6;color:#755100}.silver .compactRank{background:#f3f7fd;color:#43576e}.bronze .compactRank{background:#fff0df;color:#8d4927}
+.compactName{font-weight:750;min-width:0;overflow-wrap:anywhere}.compactTime{font-weight:850;font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums;letter-spacing:-.03em;text-align:right}
+.compactDetail{padding:8px 10px;border-top:1px solid #0002;color:#333;font-size:12px;overflow-wrap:anywhere;white-space:pre-wrap}.compactDetail .actions{margin-top:7px}.compactDetail .portalMeta{color:#444}.compactDetail button{font-size:12px;padding:7px 9px}
+.compactHint{margin:8px 0 0;font-size:12px;text-align:center;color:#e4ddce;background:#171717e8;border-radius:8px;padding:6px}
+@media(max-width:360px){.compactBoard{padding:6px}.compactRow{grid-template-columns:42px minmax(0,1fr) auto;gap:5px;padding:5px 6px;font-size:12px}.compactTime{font-size:14px}.compactRank{font-size:10px}}
 </style></head><body><main><header class="hero"><div class="eyebrow">KARTRIDER RUSH+ / RACING TEAM</div><h1>ᴷᴾ台灣民眾黨 🌱</h1><p>車隊名冊 · 公告 · 賽道排行榜</p></header>
 <nav class="tabs" role="tablist" aria-label="車隊功能"><button id="tabMembers" role="tab" aria-controls="membersPane" aria-selected="true">成員名冊</button><button id="tabAnnouncements" role="tab" aria-controls="announcementsPane" aria-selected="false">車隊公告</button><button id="tabRecords" role="tab" aria-controls="recordsPane" aria-selected="false">賽道成績</button></nav>
 <div id="membersPane" role="tabpanel" aria-labelledby="tabMembers"><p id="memberFeedback" class="status" role="status"></p>
@@ -124,12 +140,7 @@ footer{display:table;margin:20px auto 0;background:rgba(15,15,15,.85);padding:7p
 </section>
 <section class="panel" id="authPanel" aria-label="管理員登入"><div class="actions"><button id="login" disabled>管理員 Google 登入</button><button id="logout" class="secondary" hidden>登出</button><span id="who"></span></div><p id="status" class="status" role="status">正在連線 Firebase…</p>
 </section>
-<footer>ᴷᴾ 車隊網站 · V3.9.1 · 請勿轉傳他人聯絡資料
-  <section class="siteDisclaimer" aria-label="非官方組織聲明">
-    <strong>非官方組織聲明</strong>
-    <p>本站為《跑跑卡丁車 Rush+》玩家自發成立之遊戲車隊網站，僅供玩家娛樂與交流使用，不以營利為目的。本站與台灣民眾黨及任何政治人物、政治組織均無隸屬、合作或授權關係。車隊名稱及遊戲暱稱不代表任何政治組織之官方立場。</p>
-  </section>
-</footer></main>
+<footer>ᴷᴾ 車隊官方網站 · V3.9 · 請勿轉傳他人聯絡資料</footer></main>
 <script type="module">
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js';
 import {getAuth,GoogleAuthProvider,signInWithPopup,signInAnonymously,onAuthStateChanged,signOut} from 'https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js';
@@ -212,16 +223,38 @@ function makeMedal(rank,index){
  svg.innerHTML=`<defs><linearGradient id="${id}" x1="0%" y1="0%" x2="100%" y2="100%"><stop stop-color="${colors[0]}"/><stop offset=".48" stop-color="${colors[1]}"/><stop offset="1" stop-color="${colors[2]}"/></linearGradient></defs><path d="M18 2H34L46 39H27Z" fill="#943c3d"/><path d="M46 2H62L51 39H32Z" fill="#cf5450"/><circle cx="40" cy="57" r="29" fill="url(#${id})" stroke="${colors[0]}" stroke-width="2"/><circle cx="40" cy="57" r="23" fill="none" stroke="${colors[2]}" stroke-width="1.5"/><text x="40" y="68" text-anchor="middle" font-size="30" font-weight="800" fill="${colors[3]}">${rank}</text>`;
  return svg;
 }
+let compactRecords=false;
+function recordViewButton(label,compact){
+ const wrap=node('div','','leaderboardSwitch');
+ const b=node('button',label,compact?'':'secondary');b.type='button';
+ b.onclick=()=>{compactRecords=compact;$('driverFilter').value='';renderRecords();$('recordList').scrollIntoView({block:'start',behavior:'auto'})};wrap.append(b);return wrap;
+}
 function renderRecords(){
  const {items,loaded}=portal.record,el=$('recordList');el.replaceChildren();
  if(!loaded){el.append(node('p','賽道紀錄尚未載入。','portalEmpty'));return}
  const list=items.filter(isSupportedTrack).sort((a,b)=>a.timeMs-b.timeMs||a.game.localeCompare(b.game,'zh-Hant'));
  const q=normalizeKey(input('driverFilter'));
- const shown=list.filter(m=>!q||normalizeKey(m.game).includes(q));
- const head=node('div','','portalHead');head.append(node('h2','車隊排行榜'),node('small',`${list.length} 位車手`));el.append(head);
- if(!shown.length){el.append(node('p',list.length?'沒有符合條件的紀錄。':'目前沒有成績，歡迎投稿。','portalEmpty'));return}
  let rank=0,prev=-1;
- for(const [i,m] of list.entries()){if(m.timeMs!==prev)rank=i+1;prev=m.timeMs;if(!shown.includes(m))continue;
+ const ranked=list.map((m,i)=>{if(m.timeMs!==prev)rank=i+1;prev=m.timeMs;return {m,rank,i}});
+ const matches=ranked.filter(({m})=>!q||normalizeKey(m.game).includes(q));
+ const shown=compactRecords||q?matches:matches.filter(r=>r.rank<=3);
+ const head=node('div','','portalHead');head.append(node('h2',compactRecords?'完整排行榜':q?'搜尋結果':'前三名榮譽榜'),node('small',`${list.length} 位車手`));el.append(head);
+ if(compactRecords)el.append(recordViewButton('← 返回前三名榮譽榜',false));
+ if(!shown.length){el.append(node('p',list.length?'沒有符合條件的紀錄。':'目前沒有成績，歡迎投稿。','portalEmpty'));if(!compactRecords&&list.length)el.append(recordViewButton(`查看所有 ${list.length} 位車手的成績`,true));return}
+ if(compactRecords){
+  const board=node('section','','compactBoard');const header=node('div','','compactHeader');header.append(node('h3','ᴷᴾ 車隊計時成績排行（城鎮高速公路）'),node('p',q?`搜尋結果 ${shown.length} / ${list.length} 位車手`:`共 ${list.length} 位車手 · 最佳成績`));board.append(header);
+  for(const {m,rank} of shown){
+   const tone=['','gold','silver','bronze'][rank]||'';const entry=node('article','','compactEntry '+tone),row=node('button','','compactRow'),detail=node('div','','compactDetail');
+   row.type='button';row.setAttribute('aria-expanded','false');row.setAttribute('aria-label',`第 ${rank} 名，${m.game}，${formatTime(m.timeMs)}，展開操作`);
+   row.append(node('span',rank<=3?`第${rank}名`:`#${rank}`,'compactRank'),node('span',m.game,'compactName'),node('span',formatTime(m.timeMs),'compactTime'));
+   detail.hidden=true;
+   if(rank<=3){if(m.car)detail.append(node('div','車種：'+m.car));if(m.note)detail.append(node('div','備註：'+m.note))}
+   detail.append(node('div','更新：'+dateText(m.updatedAt),'portalMeta'));attachPublicActions('record',detail,m);
+   row.onclick=()=>{const expanded=detail.hidden;detail.hidden=!expanded;row.setAttribute('aria-expanded',String(expanded))};entry.append(row,detail);board.append(entry);
+  }
+  el.append(board,node('p','點擊任一車手可展開更正及管理操作。','compactHint'));el.append(recordViewButton('← 返回前三名榮譽榜',false));return;
+ }
+ for(const {m,rank,i} of shown){
  const podium=rank<=3, tone=['','gold','silver','bronze'][rank];
  const card=node('article','','portalCard'+(podium?' podium '+tone+'-card':'')),row=node('div','','recordRow'),driver=node('div',''),time=node('div',formatTime(m.timeMs),'recordTime');
  if(podium){const label=node('div','','podiumLabel');label.append(node('span',['','CHAMPION · 車隊紀錄保持者','SILVER · 第二名','BRONZE · 第三名'][rank]),node('span',rank===1?'♛':'TOP '+rank));card.append(label)}
@@ -231,7 +264,9 @@ function renderRecords(){
  if(podium)rankBadge.append(makeMedal(rank,i));
  row.append(rankBadge,driver,time);card.append(row);
  if(podium&&(m.car||m.note)){const details=node('div','','podiumDetails');for(const [label,value] of [['車種',m.car],['備註',m.note]]){if(value){const line=node('div','');line.append(node('span',label,'podiumDetailLabel'),document.createTextNode(value));details.append(line)}}card.append(details)}
- card.append(node('div','更新：'+dateText(m.updatedAt),'portalMeta recordMeta'));attachPublicActions('record',card,m);el.append(card)}
+ card.append(node('div','更新：'+dateText(m.updatedAt),'portalMeta recordMeta'));attachPublicActions('record',card,m);el.append(card)
+ }
+ el.append(recordViewButton(`查看所有 ${list.length} 位車手的成績　▾`,true));
 }
 $('driverFilter').oninput=renderRecords;
 let pendingRequests=[];
